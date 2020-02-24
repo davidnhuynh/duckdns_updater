@@ -1,4 +1,5 @@
 {
+    "Protocol" : "both",
     "UpdateInterval": 5,
     "Domain": {
         "Name": "domain-name",

@@ -10,7 +10,8 @@ import (
 
 //Config Struct for layout of config.json
 type Config struct {
-	UpdateInterval int `json:"UpdateInterval"`
+	Protocol       string `json:"Protocol"`
+	UpdateInterval int    `json:"UpdateInterval"`
 	Domain         struct {
 		Name  string `json:"Name"`
 		Token string `json:"Token"`
@@ -20,6 +21,11 @@ type Config struct {
 //deviceInfo Struct defines layout of JSON respone from IP API.
 type deviceInfo struct {
 	IP string `json:"ip"`
+}
+
+type device struct {
+	IPv4 string
+	IPv6 string
 }
 
 func loadConfig(cfg *Config) {
@@ -69,11 +75,24 @@ func main() {
 	var cfg Config
 	loadConfig(&cfg)
 
-	deviceIPv4 := getDeviceInfo("v4")
-	deviceIPv6 := getDeviceInfo("v6")
+	var device device
+	var updateURL string
 
-	updateURL := fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ip=%s&ipv6=%s", cfg.Domain.Name, cfg.Domain.Token, deviceIPv4, deviceIPv6)
-	//fmt.Println(updateURL)
+	switch cfg.Protocol {
+	case "ipv4":
+		device.IPv4 = getDeviceInfo("v4")
+		updateURL = fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ip=%s", cfg.Domain.Name, cfg.Domain.Token, device.IPv4)
+	case "ipv6":
+		device.IPv6 = getDeviceInfo("v6")
+		updateURL = fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ipv6=%s", cfg.Domain.Name, cfg.Domain.Token, device.IPv6)
+	case "both":
+		device.IPv4 = getDeviceInfo("v4")
+		device.IPv6 = getDeviceInfo("v6")
+		updateURL = fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ip=%s&ipv6=%s", cfg.Domain.Name, cfg.Domain.Token, device.IPv4, device.IPv6)
+	default:
+		fmt.Println("Invalid Protocol defined.  Protocol should be either \"ipv4\", \"ipv6\", or \"both\".")
+		os.Exit(1)
+	}
 
 	updateResponse, err := http.Get(updateURL)
 	if err != nil {
