@@ -1,0 +1,7 @@
+{
+    "UpdateInterval": 5,
+    "Domain": {
+        "Name": "domain-name",
+        "Token": "auth-token"
+    }
+}
