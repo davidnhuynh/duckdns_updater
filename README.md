@@ -1,6 +1,6 @@
 # DuckDNS Updater
 
-A dynamic dns updater for DuckDNS to automatically update a duckdns domain with an ipv6 address.
+A dynamic dns updater for DuckDNS to automatically update a duckdns domain with both an ipv4 and ipv6 address.
 
 ## Build
 
@@ -30,7 +30,7 @@ The `config.json` is as follows:
 
 ## To-Do:
 
-* Add ipv4 support.
+* ~~Add ipv4 support.~~
 * Add config to toggle between ipv4, ipv6, or both.
 * Have the check run at user-defined intervals.
 * Run process as daemon.

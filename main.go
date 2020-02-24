@@ -38,8 +38,14 @@ func loadConfig(cfg *Config) {
 	}
 }
 
-func getDeviceInfo() string {
-	apiURL := "https://api6.ipify.org?format=json"
+func getDeviceInfo(protocol string) string {
+	var apiURL string
+
+	if protocol == "v6" {
+		apiURL = "https://api6.ipify.org?format=json"
+	} else if protocol == "v4" {
+		apiURL = "https://api.ipify.org?format=json"
+	}
 
 	response, err := http.Get(apiURL)
 	if err != nil {
@@ -63,9 +69,10 @@ func main() {
 	var cfg Config
 	loadConfig(&cfg)
 
-	deviceIP := getDeviceInfo()
+	deviceIPv4 := getDeviceInfo("v4")
+	deviceIPv6 := getDeviceInfo("v6")
 
-	updateURL := fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ipv6=%s", cfg.Domain.Name, cfg.Domain.Token, deviceIP)
+	updateURL := fmt.Sprintf("https://www.duckdns.org/update?domains=%s&token=%s&ip=%s&ipv6=%s", cfg.Domain.Name, cfg.Domain.Token, deviceIPv4, deviceIPv6)
 	//fmt.Println(updateURL)
 
 	updateResponse, err := http.Get(updateURL)
