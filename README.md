@@ -20,7 +20,8 @@ The `config.json` is as follows:
         "Name": "domain-name",
         "Token": "auth-token"
     }
-}```
+}
+```
 
 * `UpdateInterval`:  Currently unused.
 * `Domain`: Array consisting of [Name,Token]
