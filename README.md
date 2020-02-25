@@ -15,6 +15,7 @@ The application reads from a `config.json` file which contains configurable opti
 The `config.json` is as follows:
 ``` json
 {
+    "Protocol" : "both",
     "UpdateInterval": 5,
     "Domain": {
         "Name": "domain-name",
@@ -23,6 +24,7 @@ The `config.json` is as follows:
 }
 ```
 
+* `Protocol`: Set to "ipv4", "ipv6", or "both" to update selected IP address type.
 * `UpdateInterval`:  Currently unused.
 * `Domain`: Array consisting of [Name,Token]
 * `Domain.Name`: Subdomain name used in duckdns.  example.duckdns.org would be simply `example`.
@@ -31,7 +33,7 @@ The `config.json` is as follows:
 ## To-Do:
 
 * ~~Add ipv4 support.~~
-* Add config to toggle between ipv4, ipv6, or both.
+* ~~Add config to toggle between ipv4, ipv6, or both.~~
 * Have the check run at user-defined intervals.
 * Run process as daemon.
 * Store last updated IP to limit unneccessary update calls to duckdns.
