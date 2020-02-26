@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"time"
 )
 
 //Config Struct for layout of config.json
@@ -94,21 +95,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	updateResponse, err := http.Get(updateURL)
-	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
-	}
-	updateResponseData, err := ioutil.ReadAll(updateResponse.Body)
-	if err != nil {
-		fmt.Print(err.Error())
-		os.Exit(1)
-	} else {
-		if string(updateResponseData) != "OK" {
-			fmt.Println("Unable to update IP, please check config")
+	//Converts the update interval to milliseconds.
+	updateInterval := cfg.UpdateInterval * 60 * 1000
+	timer := time.Tick(time.Duration(updateInterval) * time.Millisecond)
+
+	for range timer {
+		updateResponse, err := http.Get(updateURL)
+		if err != nil {
+			fmt.Print(err.Error())
+			os.Exit(1)
+		}
+		updateResponseData, err := ioutil.ReadAll(updateResponse.Body)
+		if err != nil {
+			fmt.Print(err.Error())
 			os.Exit(1)
 		} else {
-			fmt.Println("Sucessfully updated IP.")
+			if string(updateResponseData) != "OK" {
+				fmt.Println("Unable to update IP, please check config")
+				os.Exit(1)
+			} else {
+				t := time.Now()
+				fmt.Printf("%s Sucessfully updated IP.\n", t.Format("2006-01-02 15:04:05"))
+			}
 		}
 	}
 }
