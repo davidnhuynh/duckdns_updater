@@ -36,7 +36,7 @@ The `config.json` is as follows:
 * `Domain.Token`: Authorization token supplied by DuckDNS.
 
 
-Docker requires you to mount the config.json into the container underneath `/app/config.json/`.
+Docker requires you to mount the config.json into the container underneath `/app/config.json`.
 
 ``` bash
 docker run -v ${PWD}/config.json:/app/config.json:ro <image_name>
