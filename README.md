@@ -36,7 +36,7 @@ The `config.json` is as follows:
 * ~~Add config to toggle between ipv4, ipv6, or both.~~
 * ~~Have the check run at user-defined intervals.~~
 * Run process as daemon.
-* Store last updated IP to limit unneccessary update calls to duckdns.
+* ~~Store last updated IP to limit unneccessary update calls to duckdns.~~
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
