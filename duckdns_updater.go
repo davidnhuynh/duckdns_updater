@@ -72,12 +72,9 @@ func getDeviceInfo(protocol string) string {
 	return device.IP
 }
 
-func main() {
-	var cfg Config
-	loadConfig(&cfg)
-
-	var device device
+func setUpdateURL(cfg Config) string {
 	var updateURL string
+	var device device
 
 	switch cfg.Protocol {
 	case "ipv4":
@@ -94,29 +91,40 @@ func main() {
 		fmt.Println("Invalid Protocol defined.  Protocol should be either \"ipv4\", \"ipv6\", or \"both\".")
 		os.Exit(1)
 	}
+	return updateURL
+}
+
+func updateDNS(updateURL string) {
+	updateResponse, err := http.Get(updateURL)
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+	updateResponseData, err := ioutil.ReadAll(updateResponse.Body)
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	} else {
+		if string(updateResponseData) != "OK" {
+			fmt.Println("Unable to update IP, please check config")
+			os.Exit(1)
+		} else {
+			t := time.Now()
+			fmt.Printf("%s Sucessfully updated IP.\n", t.Format("2006-01-02 15:04:05"))
+		}
+	}
+}
+
+func main() {
+	var cfg Config
+	loadConfig(&cfg)
 
 	//Converts the update interval to milliseconds.
 	updateInterval := cfg.UpdateInterval * 60 * 1000
 	timer := time.Tick(time.Duration(updateInterval) * time.Millisecond)
 
 	for range timer {
-		updateResponse, err := http.Get(updateURL)
-		if err != nil {
-			fmt.Print(err.Error())
-			os.Exit(1)
-		}
-		updateResponseData, err := ioutil.ReadAll(updateResponse.Body)
-		if err != nil {
-			fmt.Print(err.Error())
-			os.Exit(1)
-		} else {
-			if string(updateResponseData) != "OK" {
-				fmt.Println("Unable to update IP, please check config")
-				os.Exit(1)
-			} else {
-				t := time.Now()
-				fmt.Printf("%s Sucessfully updated IP.\n", t.Format("2006-01-02 15:04:05"))
-			}
-		}
+		updateURL := setUpdateURL(cfg)
+		updateDNS(updateURL)
 	}
 }
