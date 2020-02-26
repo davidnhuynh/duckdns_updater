@@ -72,7 +72,7 @@ func getDeviceInfo(protocol string) string {
 	return device.IP
 }
 
-func setUpdateURL(cfg Config) string {
+func setUpdateURL(cfg Config) (string, device) {
 	var updateURL string
 	var device device
 
@@ -91,7 +91,7 @@ func setUpdateURL(cfg Config) string {
 		fmt.Println("Invalid Protocol defined.  Protocol should be either \"ipv4\", \"ipv6\", or \"both\".")
 		os.Exit(1)
 	}
-	return updateURL
+	return updateURL, device
 }
 
 func updateDNS(updateURL string) {
@@ -123,8 +123,14 @@ func main() {
 	updateInterval := cfg.UpdateInterval * 60 * 1000
 	timer := time.Tick(time.Duration(updateInterval) * time.Millisecond)
 
+	var existingIPv4, existingIPv6 string
 	for range timer {
-		updateURL := setUpdateURL(cfg)
-		updateDNS(updateURL)
+		updateURL, device := setUpdateURL(cfg)
+		if existingIPv4 != device.IPv4 || existingIPv6 != device.IPv6 {
+			updateDNS(updateURL)
+			fmt.Printf("ExistingIPs: [%s, %s] and DeviceIPs: [%s, %s]", existingIPv4, existingIPv6, device.IPv4, device.IPv6)
+			existingIPv4 = device.IPv4
+			existingIPv6 = device.IPv6
+		}
 	}
 }
