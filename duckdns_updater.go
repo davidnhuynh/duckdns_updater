@@ -128,7 +128,7 @@ func main() {
 		updateURL, device := setUpdateURL(cfg)
 		if existingIPv4 != device.IPv4 || existingIPv6 != device.IPv6 {
 			updateDNS(updateURL)
-			fmt.Printf("ExistingIPs: [%s, %s] and DeviceIPs: [%s, %s]", existingIPv4, existingIPv6, device.IPv4, device.IPv6)
+			//fmt.Printf("ExistingIPs: [%s, %s] and DeviceIPs: [%s, %s]", existingIPv4, existingIPv6, device.IPv4, device.IPv6)
 			existingIPv4 = device.IPv4
 			existingIPv6 = device.IPv6
 		}
