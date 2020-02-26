@@ -8,6 +8,11 @@ A dynamic dns updater for DuckDNS to automatically update a duckdns domain with 
 go build .
 ```
 
+Docker
+``` bash
+docker build -t <image_name> .
+```
+
 ## Usage
 
 The application reads from a `config.json` file which contains configurable options, domains, and your authorization token from DuckDNS.  There is a default provided config.json
@@ -29,6 +34,15 @@ The `config.json` is as follows:
 * `Domain`: Array consisting of [Name,Token]
 * `Domain.Name`: Subdomain name used in duckdns.  example.duckdns.org would be simply `example`.
 * `Domain.Token`: Authorization token supplied by DuckDNS.
+
+
+Docker requires you to mount the config.json into the container underneath `/app/config.json/`.
+
+``` bash
+docker run -v ${PWD}/config.json:/app/config.json:ro <image_name>
+```
+
+Note: Docker does not currently support ipv6, it may work running under host networking.
 
 ## To-Do:
 
